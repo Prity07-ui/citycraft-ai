@@ -13,14 +13,14 @@ interface BuildingProps {
 const Building = ({ position, size, color }: BuildingProps) => (
   <mesh position={position} castShadow receiveShadow>
     <boxGeometry args={size} />
-    <meshStandardMaterial color={color} metalness={0.6} roughness={0.3} emissive={color} emissiveIntensity={0.05} />
+    <meshStandardMaterial color={color} metalness={0.1} roughness={0.6} />
   </mesh>
 );
 
 const Ground = () => (
   <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
     <planeGeometry args={[40, 40]} />
-    <meshStandardMaterial color="#0a1628" metalness={0.8} roughness={0.4} />
+    <meshStandardMaterial color="#e8edf2" metalness={0.05} roughness={0.8} />
   </mesh>
 );
 
@@ -33,7 +33,7 @@ const Road = ({ start, end }: { start: [number, number, number]; end: [number, n
   return (
     <mesh position={[midX, 0.01, midZ]} rotation={[-Math.PI / 2, 0, angle]}>
       <planeGeometry args={[length, 0.3]} />
-      <meshStandardMaterial color="#1a3a5c" emissive="#00cccc" emissiveIntensity={0.1} />
+      <meshStandardMaterial color="#b0bec5" />
     </mesh>
   );
 };
@@ -41,7 +41,7 @@ const Road = ({ start, end }: { start: [number, number, number]; end: [number, n
 const GreenSpace = ({ position, radius }: { position: [number, number, number]; radius: number }) => (
   <mesh position={position}>
     <cylinderGeometry args={[radius, radius, 0.1, 32]} />
-    <meshStandardMaterial color="#0a4a2a" emissive="#00ff88" emissiveIntensity={0.05} />
+    <meshStandardMaterial color="#66bb6a" />
   </mesh>
 );
 
@@ -53,11 +53,11 @@ const CityScene = ({ plan }: { plan: CityPlan }) => {
 
     const numBuildings = Math.min(30 + Math.floor(plan.population / 50000), 80);
     const colors = {
-      Residential: '#0088aa',
-      Commercial: '#cc6600',
-      Sustainable: '#00aa44',
+      Residential: '#64b5f6',
+      Commercial: '#ffb74d',
+      Sustainable: '#81c784',
     };
-    const baseColor = colors[plan.primaryGoal as keyof typeof colors] || '#0088aa';
+    const baseColor = colors[plan.primaryGoal as keyof typeof colors] || '#64b5f6';
 
     for (let i = 0; i < numBuildings; i++) {
       const x = (rng(i * 3) - 0.5) * 30;
@@ -65,7 +65,7 @@ const CityScene = ({ plan }: { plan: CityPlan }) => {
       const height = 0.5 + rng(i * 3 + 2) * 4 * (plan.budget / 10000000);
       const w = 0.3 + rng(i * 7) * 0.8;
       const mixFactor = rng(i * 11);
-      const c = mixFactor > 0.7 ? '#00cccc' : mixFactor > 0.4 ? baseColor : '#1a3a6a';
+      const c = mixFactor > 0.7 ? '#4dd0e1' : mixFactor > 0.4 ? baseColor : '#90a4ae';
 
       result.push({ position: [x, height / 2, z], size: [w, height, w], color: c });
     }
@@ -74,10 +74,10 @@ const CityScene = ({ plan }: { plan: CityPlan }) => {
 
   return (
     <>
-      <ambientLight intensity={0.3} />
-      <directionalLight position={[10, 15, 10]} intensity={0.8} castShadow />
-      <pointLight position={[0, 10, 0]} intensity={0.5} color="#00cccc" />
-      <pointLight position={[-10, 5, -10]} intensity={0.3} color="#cc44ff" />
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[10, 15, 10]} intensity={1.0} castShadow />
+      <pointLight position={[0, 10, 0]} intensity={0.4} color="#90caf9" />
+      <pointLight position={[-10, 5, -10]} intensity={0.3} color="#ce93d8" />
 
       <Ground />
       {buildings.map((b, i) => <Building key={i} {...b} />)}
@@ -93,7 +93,7 @@ const CityScene = ({ plan }: { plan: CityPlan }) => {
       <GreenSpace position={[12, 0.06, 12]} radius={1.5} />
       <GreenSpace position={[-4, 0.06, 12]} radius={1.8} />
 
-      <fog attach="fog" args={['#050d1a', 15, 45]} />
+      <fog attach="fog" args={['#e8edf2', 20, 50]} />
       <OrbitControls enablePan enableZoom enableRotate maxPolarAngle={Math.PI / 2.2} minDistance={5} maxDistance={35} />
     </>
   );

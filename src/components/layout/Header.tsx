@@ -1,12 +1,20 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Building2, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Building2, Menu, X, LogOut, UserCircle } from 'lucide-react';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
   const isDashboard = location.pathname !== '/';
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   return (
     <motion.header
@@ -42,14 +50,29 @@ const Header = () => {
           >
             Dashboard
           </Link>
-          {!isDashboard && (
-            <Link to="/dashboard">
+
+          {user ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-heading text-muted-foreground flex items-center gap-1">
+                <UserCircle className="w-4 h-4" />
+                {user.email}
+              </span>
+              <button
+                onClick={handleSignOut}
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-heading font-medium text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link to="/auth">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-5 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm tracking-wide glow-primary"
               >
-                Get Started
+                Sign In
               </motion.button>
             </Link>
           )}
@@ -68,7 +91,14 @@ const Header = () => {
         >
           <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-heading text-muted-foreground hover:text-primary">Home</Link>
           <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="text-sm font-heading text-muted-foreground hover:text-primary">Dashboard</Link>
-          <Link to="/dashboard" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm text-center">Get Started</Link>
+          {user ? (
+            <>
+              <span className="text-xs font-heading text-muted-foreground">{user.email}</span>
+              <button onClick={() => { handleSignOut(); setMobileOpen(false); }} className="text-sm font-heading text-destructive text-left">Sign Out</button>
+            </>
+          ) : (
+            <Link to="/auth" onClick={() => setMobileOpen(false)} className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-heading font-semibold text-sm text-center">Sign In</Link>
+          )}
         </motion.div>
       )}
     </motion.header>
