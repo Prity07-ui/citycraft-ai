@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Building2, Brain, BarChart3, Shield, Droplets, Zap, ArrowRight } from 'lucide-react';
-import heroImage from '@/assets/hero-city.jpg';
+import { lazy, Suspense } from 'react';
+
+const HeroScene = lazy(() => import('@/components/hero/HeroScene'));
 
 const features = [
   { icon: Brain, title: 'AI-Powered Planning', desc: 'Intelligent simulation engine generates optimized city layouts based on your parameters.' },
@@ -24,13 +26,18 @@ const Index = () => {
     <div className="min-h-screen">
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={heroImage} alt="Futuristic smart city" className="w-full h-full object-cover opacity-40" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
-        </div>
-        <div className="absolute inset-0 gradient-mesh" />
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 hero-gradient-bg" />
 
-        <div className="relative z-10 container mx-auto px-4 text-center pt-20">
+        {/* 3D Scene */}
+        <Suspense fallback={null}>
+          <HeroScene />
+        </Suspense>
+
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/50 to-background z-[1]" />
+
+        <div className="relative z-10 container mx-auto px-4 text-center pt-20" style={{ zIndex: 2 }}>
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}

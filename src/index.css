@@ -188,6 +188,41 @@
   }
 }
 
+/* Animated hero gradient background */
+@keyframes hero-gradient {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 100%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 0%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    hsl(var(--background)),
+    hsl(200 80% 90%),
+    hsl(250 60% 92%),
+    hsl(180 50% 88%),
+    hsl(var(--background))
+  );
+  background-size: 400% 400%;
+  animation: hero-gradient 12s ease infinite;
+}
+
+.dark .hero-gradient-bg {
+  background: linear-gradient(
+    -45deg,
+    hsl(var(--background)),
+    hsl(220 40% 16%),
+    hsl(260 30% 18%),
+    hsl(200 35% 14%),
+    hsl(var(--background))
+  );
+  background-size: 400% 400%;
+  animation: hero-gradient 12s ease infinite;
+}
+
 /* Animated gradient background */
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
